@@ -35,6 +35,7 @@ import com.sensorsdata.analytics.android.sdk.exceptions.InvalidDataException;
 import com.sensorsdata.analytics.android.sdk.exceptions.ResponseErrorException;
 import com.sensorsdata.analytics.android.sdk.internal.beans.InternalConfigOptions;
 import com.sensorsdata.analytics.android.sdk.util.AppStateTools;
+import com.sensorsdata.analytics.android.sdk.util.ConvertUtils;
 import com.sensorsdata.analytics.android.sdk.util.JSONUtils;
 import com.sensorsdata.analytics.android.sdk.util.NetworkUtils;
 import com.sensorsdata.analytics.android.sdk.util.SADataHelper;
@@ -315,13 +316,14 @@ public class AnalyticsMessages {
             if (!TextUtils.isEmpty(data)) {
                 builder.appendQueryParameter("crc", String.valueOf(data.hashCode()));
             }
-//            if (mSensorsDataAPI.getIsGzipUp()){
-//                builder.appendQueryParameter("gzip", gzip);
-//                builder.appendQueryParameter("data_list", data);
-//            }else{
             //修改  将其不进行压缩上报
-            builder.appendQueryParameter("data_list", rawMessage);
-//            }
+            int byteLength = ConvertUtils.hexString2Bytes(rawMessage).length;
+            if (byteLength<5000){
+                builder.appendQueryParameter("data_list", rawMessage);
+            }else{
+                builder.appendQueryParameter("gzip", gzip);
+                builder.appendQueryParameter("data_list", data);
+            }
 
             if (is_instant_event) {
                 builder.appendQueryParameter("instant_event", "true");
