@@ -26,6 +26,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensorsdata.analytics.android.sdk.data.adapter.DbAdapter;
 import com.sensorsdata.analytics.android.sdk.data.adapter.DbParams;
@@ -35,7 +36,6 @@ import com.sensorsdata.analytics.android.sdk.exceptions.InvalidDataException;
 import com.sensorsdata.analytics.android.sdk.exceptions.ResponseErrorException;
 import com.sensorsdata.analytics.android.sdk.internal.beans.InternalConfigOptions;
 import com.sensorsdata.analytics.android.sdk.util.AppStateTools;
-import com.sensorsdata.analytics.android.sdk.util.ConvertUtils;
 import com.sensorsdata.analytics.android.sdk.util.JSONUtils;
 import com.sensorsdata.analytics.android.sdk.util.NetworkUtils;
 import com.sensorsdata.analytics.android.sdk.util.SADataHelper;
@@ -317,10 +317,15 @@ public class AnalyticsMessages {
                 builder.appendQueryParameter("crc", String.valueOf(data.hashCode()));
             }
             //修改  将其不进行压缩上报
-            int byteLength = ConvertUtils.hexString2Bytes(rawMessage).length;
-            if (byteLength<5000){
-                builder.appendQueryParameter("data_list", rawMessage);
-            }else{
+            try {
+                int byteLength = rawMessage.getBytes().length;
+                if (byteLength < 5000) {
+                    builder.appendQueryParameter("data_list", rawMessage);
+                } else {
+                    builder.appendQueryParameter("gzip", gzip);
+                    builder.appendQueryParameter("data_list", data);
+                }
+            } catch (Exception exception) {
                 builder.appendQueryParameter("gzip", gzip);
                 builder.appendQueryParameter("data_list", data);
             }
