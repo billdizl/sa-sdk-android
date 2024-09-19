@@ -315,9 +315,14 @@ public class AnalyticsMessages {
             if (!TextUtils.isEmpty(data)) {
                 builder.appendQueryParameter("crc", String.valueOf(data.hashCode()));
             }
+//            if (mSensorsDataAPI.getIsGzipUp()){
+//                builder.appendQueryParameter("gzip", gzip);
+//                builder.appendQueryParameter("data_list", data);
+//            }else{
+            //修改  将其不进行压缩上报
+            builder.appendQueryParameter("data_list", rawMessage);
+//            }
 
-            builder.appendQueryParameter("gzip", gzip);
-            builder.appendQueryParameter("data_list", data);
             if (is_instant_event) {
                 builder.appendQueryParameter("instant_event", "true");
             }
