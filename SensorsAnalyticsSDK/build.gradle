@@ -36,16 +36,16 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    if (rootProject.ext.publish.isEmbedSensorsSDKAAR) { //用于打本地包
-//        embed project(':module_common')
-//        embed project(':module_webview')
-//        embed project(':module_advert')
-//        embed project(':module_visual')
-//        embed project(':module_autoTrack')
-//        embed project(':module_push')
-//        embed project(':module_encrypt')
-//        embed project(':module_exposure')
-//    } else {
+    if (rootProject.ext.publish.isEmbedSensorsSDKAAR) { //用于打本地包
+        embed project(':module_common')
+        embed project(':module_webview')
+        embed project(':module_advert')
+        embed project(':module_visual')
+        embed project(':module_autoTrack')
+        embed project(':module_push')
+        embed project(':module_encrypt')
+        embed project(':module_exposure')
+    } else {
         api project(':module_core')
         api project(':module_advert')
         api project(':module_visual')
@@ -53,5 +53,5 @@ dependencies {
         api project(':module_push')
         api project(':module_encrypt')
         api project(':module_exposure')
-//    }
+    }
 }
